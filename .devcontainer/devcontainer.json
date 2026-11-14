@@ -1,0 +1,29 @@
+{
+  "name": "cadence-course-platform",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "mounts": [
+    // Linux node_modules lives in a volume so it never mixes with the host's
+    // macOS build of better-sqlite3 (a native module).
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
+    // Keep the Claude Code login and history across container rebuilds.
+    "source=${localWorkspaceFolderBasename}-claude-config,target=/home/node/.claude,type=volume"
+  ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "forwardPorts": [5173, 8787],
+  "portsAttributes": {
+    "5173": { "label": "App (npm run dev)", "onAutoForward": "openBrowser" },
+    "8787": { "label": "Request logger", "onAutoForward": "silent" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "anthropic.claude-code"
+      ]
+    }
+  },
+  "remoteUser": "node"
+}
