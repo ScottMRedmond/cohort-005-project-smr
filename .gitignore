@@ -33,3 +33,7 @@ reports/
 
 # ignore .scratch
 .scratch/
+
+# ignore dev container and statusline change
+.devcontainer/
+.claude/statusline.sh
