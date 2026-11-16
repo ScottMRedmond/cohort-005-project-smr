@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Db } from "./lib/db";
 import {
   getBestAttempt,
@@ -80,6 +81,8 @@ export function submitQuiz(
   return scoreQuiz(db, submission);
 }
 
+const rowId = z.coerce.number().int().positive();
+
 /** Answers from form fields named `question-{questionId}` = optionId. */
 export function readQuizAnswers(
   entries: Iterable<[string, unknown]>
@@ -87,10 +90,10 @@ export function readQuizAnswers(
   const answers: Record<number, number> = {};
   for (const [key, value] of entries) {
     if (!key.startsWith("question-")) continue;
-    const questionId = Number(key.replace("question-", ""));
-    const optionId = Number(value);
-    if (!isNaN(questionId) && !isNaN(optionId)) {
-      answers[questionId] = optionId;
+    const questionId = rowId.safeParse(key.slice("question-".length));
+    const optionId = rowId.safeParse(value);
+    if (questionId.success && optionId.success) {
+      answers[questionId.data] = optionId.data;
     }
   }
   return answers;

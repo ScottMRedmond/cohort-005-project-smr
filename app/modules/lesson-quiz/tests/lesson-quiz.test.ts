@@ -265,4 +265,16 @@ describe("readQuizAnswers", () => {
       ])
     ).toEqual({ 7: 21, 9: 22 });
   });
+
+  it("drops blank, fractional and negative ids instead of reading them as numbers", () => {
+    expect(
+      readQuizAnswers([
+        ["question-7", ""],
+        ["question-", "4"],
+        ["question-8", "1.5"],
+        ["question-9", "-2"],
+        ["question-10", "30"],
+      ])
+    ).toEqual({ 10: 30 });
+  });
 });

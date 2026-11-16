@@ -62,6 +62,8 @@ const saveNoteSchema = z.object({
     ),
 });
 
+const quizIdSchema = z.coerce.number().int().positive();
+
 const deleteCommentSchema = z.object({
   intent: z.literal("delete-comment"),
   commentId: z.coerce.number().int(),
@@ -422,8 +424,8 @@ export async function action({ params, request }: Route.ActionArgs) {
   }
 
   if (intent === "submit-quiz") {
-    const quizId = Number(formData.get("quizId"));
-    if (isNaN(quizId)) {
+    const quizId = quizIdSchema.safeParse(formData.get("quizId"));
+    if (!quizId.success) {
       throw data("Invalid quiz ID", { status: 400 });
     }
     // Scoped to this lesson, so a quiz elsewhere can't be reached by posting
@@ -431,7 +433,7 @@ export async function action({ params, request }: Route.ActionArgs) {
     const result = submitQuiz(db, {
       userId: currentUserId,
       lessonId,
-      quizId,
+      quizId: quizId.data,
       answers: readQuizAnswers(formData.entries()),
     });
     if (!result) {
