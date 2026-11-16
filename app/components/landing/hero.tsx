@@ -1,7 +1,8 @@
 import { Link } from "react-router";
-import { ArrowRight, BookOpen, User } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { CourseImage } from "~/components/course-image";
+import { CourseMeta } from "~/components/landing/course-meta";
 import type {
   LandingCourse,
   LandingStats,
@@ -91,16 +92,11 @@ function Spotlight({ course }: { course: LandingCourse }) {
         <p className="mt-2 line-clamp-2 text-muted-foreground">
           {course.description}
         </p>
-        <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <User className="size-4" />
-            {course.instructorName}
-          </span>
-          <span className="flex items-center gap-1">
-            <BookOpen className="size-4" />
-            {course.lessonCount} lessons
-          </span>
-        </div>
+        <CourseMeta
+          course={course}
+          className="mt-4 flex items-center gap-4 text-sm text-muted-foreground"
+          iconClassName="size-4"
+        />
       </div>
     </Link>
   );
