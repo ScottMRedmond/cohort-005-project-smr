@@ -41,3 +41,10 @@ stryker.log
 
 # Emails written locally instead of sent
 .outbox/
+
+# ignore .scratch
+.scratch/
+
+# ignore dev container and statusline change
+.devcontainer/
+.claude/statusline.sh
