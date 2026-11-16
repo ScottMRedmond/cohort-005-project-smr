@@ -43,7 +43,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return {
     spotlight,
-    featuredCourses: featured,
+    featured,
     stats,
     users: users.map((u) => ({ id: u.id, name: u.name, role: u.role })),
     currentUser: currentUser
@@ -58,7 +58,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const {
     spotlight,
-    featuredCourses,
+    featured,
     stats,
     users,
     currentUser,
@@ -66,6 +66,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     countryTierInfo,
     countries,
   } = loaderData;
+  const signedIn = currentUser !== null;
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
@@ -127,13 +128,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </header>
 
-      <Hero
-        spotlight={spotlight}
-        stats={stats}
-        signedIn={currentUser !== null}
-      />
-      <FeaturedCourses courses={featuredCourses} />
-      <LandingFooter signedIn={currentUser !== null} />
+      <Hero spotlight={spotlight} stats={stats} signedIn={signedIn} />
+      <FeaturedCourses courses={featured} />
+      <LandingFooter signedIn={signedIn} />
 
       <DevUI
         users={users}
