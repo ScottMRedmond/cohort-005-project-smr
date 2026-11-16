@@ -96,6 +96,16 @@ describe("landing.get", () => {
     ]);
   });
 
+  it("features only the courses there are after the spotlight", () => {
+    addCourse("Old");
+    addCourse("New");
+
+    const page = createLanding(db).get();
+
+    expect(page.spotlight?.title).toBe("New");
+    expect(page.featured.map((course) => course.title)).toEqual(["Old"]);
+  });
+
   it("describes each course with its instructor, category and lesson count", () => {
     const course = addCourse("Rust");
     addLessons(course.id, [2, 3]);
