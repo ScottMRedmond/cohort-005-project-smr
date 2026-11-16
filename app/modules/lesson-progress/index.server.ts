@@ -50,7 +50,6 @@ export function recordLessonVisit(
   };
 }
 
-/** Mark the lesson completed for the learner at `now`. */
 export function completeLesson(
   db: Db,
   learner: { userId: number; lessonId: number },
