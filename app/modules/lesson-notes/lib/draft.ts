@@ -14,11 +14,14 @@ export function describeDraft(
   savedBody: string | null,
   maxLength: number = MAX_NOTE_LENGTH
 ): NoteDraft {
-  const length = draft.length;
+  // The save action trims the note before it validates and stores it, so judge
+  // the draft as it will be stored. Comparing the raw text would leave a note
+  // saved with a trailing newline marked "Unsaved changes" forever.
+  const stored = draft.trim();
+  const length = stored.length;
   const tooLong = length > maxLength;
-  // The save action rejects a blank note, so a blank draft cannot be saved.
-  const empty = draft.trim().length === 0;
-  const unsaved = draft !== (savedBody ?? "");
+  const empty = length === 0;
+  const unsaved = stored !== (savedBody ?? "");
 
   return {
     length,

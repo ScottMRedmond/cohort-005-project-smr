@@ -29,7 +29,7 @@ describe("describeNoteDraft", () => {
   it("treats a whitespace-only draft as empty and unsaveable", () => {
     expect(describeNoteDraft("   \n ", null)).toMatchObject({
       empty: true,
-      unsaved: true,
+      unsaved: false,
       canSave: false,
     });
   });
@@ -60,6 +60,21 @@ describe("describeNoteDraft", () => {
       length: 4,
       tooLong: true,
       canSave: false,
+    });
+  });
+
+  it("treats a draft that differs from the saved note only by surrounding whitespace as saved", () => {
+    expect(describeNoteDraft("same\n", "same")).toMatchObject({
+      unsaved: false,
+      canSave: false,
+    });
+  });
+
+  it("counts characters as the server will store them, without surrounding whitespace", () => {
+    expect(describeNoteDraft("abc\n", null, 3)).toMatchObject({
+      length: 3,
+      tooLong: false,
+      canSave: true,
     });
   });
 });
